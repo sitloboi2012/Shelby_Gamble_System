@@ -7,7 +7,7 @@ from enum import StrEnum
 from pydantic import BaseModel
 
 
-class Constanst(StrEnum):
+class Constant(StrEnum):
     YAHOO_API_KEY = os.environ["YAHOO_FINANCE_KEY"]
     FINNHUB_API_KEY = os.environ["FINNHUB_API_KEY"]
 

@@ -4,6 +4,9 @@ coloredlogs==15.0.1
 discord.py==2.2.3
 fastapi==0.99.1
 finnhub-python==2.4.18
+google-api-python-client==2.98.0
+google-auth-httplib2==0.1.1
+google_auth_oauthlib
 gunicorn==21.2.0
 loguru==0.7.2
 numpy==1.25.2
