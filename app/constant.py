@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 
 class Constant(StrEnum):
-    YAHOO_API_KEY = os.environ["YAHOO_FINANCE_KEY"]
+    POLYGON_API_KEY = os.environ["POLYGON_API_KEY"]
     FINNHUB_API_KEY = os.environ["FINNHUB_API_KEY"]
 
 

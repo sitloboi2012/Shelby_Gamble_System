@@ -7,18 +7,22 @@ import time
 
 from functools import lru_cache
 
+import streamlit as st
 import finnhub as fb
 
 from finnhub.client import Client
 
 from .base import BaseFinanceAPI
-from constant import Constant
 
 
 class FinnHubAPI(BaseFinanceAPI):
     """`FinnHub API Object`. For documentation, please use this link: https://finnhub.io/docs/api"""
 
-    def __init__(self, api_name: str = "FinnHub API", api_key: str = Constant.FINNHUB_API_KEY):
+    def __init__(
+        self,
+        api_name: str = "FinnHub API",
+        api_key: str = st.secrets["FINNHUB_API_KEY"],
+    ):
         super().__init__(api_name, api_key)
         self.api_name = api_name
         self.api_key = api_key
@@ -37,12 +41,13 @@ class FinnHubAPI(BaseFinanceAPI):
 
     def pull_data_sync(self, ticker: str, from_date: int, to_date: int) -> dict:
         """
-        Retrieves stock candle data for a given ticker symbol within a specified date range.
+        Retrieves stock candle data for a given ticker symbol
+        within a specified date range.
 
         Args:
-            ticker (str): The ticker symbol for which to retrieve data.
-            from_date (int): The starting date of the data range in UNIX timestamp format.
-            to_date (int): The ending date of the data range in UNIX timestamp format.
+            ticker (str): The ticker symbol to retrieve data.
+            from_date (int): The start date in UNIX timestamp format.
+            to_date (int): The ending date in UNIX timestamp format.
 
         Returns:
             dict: The retrieved stock candle data.
@@ -57,21 +62,25 @@ class FinnHubAPI(BaseFinanceAPI):
         to_date: str,
     ) -> dict[str, int | float | str] | list[dict[str, int | float | str]]:
         """
-        Retrieves stock candle data for a given ticker symbol or list of ticker symbols within a specified date range.
+        Retrieves stock candle data for a given ticker symbol or list of
+        ticker symbols within a specified date range.
 
         Args:
             ticker (str | list[str]): The ticker symbol(s) for which to retrieve data.
-            from_date (str): The starting date of the data range in the format 'YYYY-MM-DD'.
-            to_date (str): The ending date of the data range in the format 'YYYY-MM-DD'.
+            from_date (str): The starting date in the format 'YYYY-MM-DD'.
+            to_date (str): The ending date in the format 'YYYY-MM-DD'.
 
         Returns:
-            dict | list[dict]: The retrieved stock candle data. If a single ticker is provided, a dictionary is returned. If a list of tickers is provided, a list of dictionaries is returned.
+            dict | list[dict]: The retrieved stock candle data.
+            If a single ticker is provided, a dictionary is returned.
+            If a list of tickers is provided, a list of dictionaries is returned.
         """
         from_date_unix = self.convert_date_to_unix(from_date)
         to_date_unix = self.convert_date_to_unix(to_date)
 
         if not isinstance(ticker, tuple):
-            return self.pull_data_sync(ticker, from_date_unix, to_date_unix)
+            response = self.pull_data_sync(ticker, from_date_unix, to_date_unix)
+            return self.clean_data(response)
 
         result = []
         for name in ticker:
@@ -107,5 +116,23 @@ class FinnHubAPI(BaseFinanceAPI):
         """
         return datetime.datetime.fromtimestamp(unix_date, tz=datetime.timezone.utc).strftime("%Y-%m-%d")
 
-    def clean_data(self):
-        return super().clean_data()
+    def clean_data(self, response_dict):
+        response_dict["close"] = response_dict["c"]
+        response_dict["high"] = response_dict["h"]
+        response_dict["low"] = response_dict["l"]
+        response_dict["open"] = response_dict["o"]
+        response_dict["volumn"] = response_dict["v"]
+        response_dict["api_status"] = response_dict["s"]
+        response_dict["time"] = response_dict["t"]
+        del (
+            response_dict["c"],
+            response_dict["h"],
+            response_dict["l"],
+            response_dict["t"],
+            response_dict["o"],
+            response_dict["v"],
+            response_dict["s"],
+        )
+
+        response_dict["time"] = [self.convert_unix_to_date(value) for value in response_dict["time"]]
+        return response_dict

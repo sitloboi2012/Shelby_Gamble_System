@@ -4,17 +4,29 @@ import datetime
 
 import streamlit as st
 
+from model.finnhub import FinnHubAPI
 
-def main():
+FINNHUB_OBJ = FinnHubAPI()
+
+
+def input_data():
+    with st.form("data-form"):
+        ticker = st.selectbox("Hôm nay xem con hàng nào:", ["AAPL", "TSLA"])
+        from_date = st.date_input("Ngày bắt đầu", datetime.date(2022, 1, 1))
+        end_date = st.date_input("Ngày kết thúc")
+        submitted = st.form_submit_button("Lấy số đề về")
+    return ticker, from_date, end_date, submitted
+
+
+def interface():
     st.title("Shelby's Gamble System")
     st.markdown("__Tích cực quay tay, vận may sẽ tới__")
 
     with st.sidebar:
-        st.selectbox("Hôm nay xem con hàng nào:", ["AAPL", "TSLA", "VIC"])
-        st.date_input("Ngày bắt đầu", datetime.date(2022, 1, 1))
-        st.date_input("Ngày kết thúc")
-        st.button("Lấy số đề về")
+        ticker, from_date, end_date, submitted = input_data()
 
-
-if __name__ == "__main__":
-    main()
+    if submitted:
+        with st.spinner("Ngủ đi! Hàng đang về"):
+            response = FINNHUB_OBJ.pull_data(ticker, str(from_date), str(end_date))
+        st.write("Dậy đi ông cháu ơi! Hàng về rồi")
+        st.dataframe(response, use_container_width=True)

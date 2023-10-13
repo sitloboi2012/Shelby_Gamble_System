@@ -13,3 +13,6 @@ pip install -r app/requirements-dev.txt
 pre-commit install
 pre-commit run --all-files
 ```
+
+## Running UI
+To run the UI locally, run `streamlit run app/main.py`
