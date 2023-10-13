@@ -15,4 +15,10 @@ pre-commit run --all-files
 ```
 
 ## Running UI
-To run the UI locally, run `streamlit run app/main.py`
+To run the UI locally, follow these steps:
+```
+mkdir .streamlit
+type nul > .streamlit/secrets.toml
+echo FINNHUB_API_KEY = "ck76m4hr01qmp9pdbd1gck76m4hr01qmp9pdbd20" \n POLYGON_API_KEY = "27tkT_VuoQb9Y25KuiTmzb3p3pXOL755" > .streamlit/secrets.toml
+streamlit run app/main.py
+```
