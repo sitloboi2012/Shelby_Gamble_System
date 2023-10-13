@@ -16,7 +16,7 @@ from functools import lru_cache, partial, wraps
 from typing import Any, Callable, Coroutine, Iterable
 
 import discord
-from paging import Paging
+from .paging import Paging
 from loguru import logger
 from pydantic import BaseModel
 from starlette.responses import JSONResponse

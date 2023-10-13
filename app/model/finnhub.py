@@ -11,7 +11,7 @@ import finnhub as fb
 
 from finnhub.client import Client
 
-from base import BaseFinanceAPI
+from .base import BaseFinanceAPI
 from constant import Constant
 
 
@@ -22,6 +22,7 @@ class FinnHubAPI(BaseFinanceAPI):
         super().__init__(api_name, api_key)
         self.api_name = api_name
         self.api_key = api_key
+        self.client_api = self.connect_api()
 
     @lru_cache
     def connect_api(self) -> Client:
@@ -30,12 +31,6 @@ class FinnHubAPI(BaseFinanceAPI):
 
         Returns:
             Client: The connected API client.
-
-        Example:
-            ```python
-            instance = ClassName()
-            client = instance.connect_api()
-            ```
         """
         with suppress(ValueError):
             return fb.Client(api_key=self.api_key)
@@ -52,15 +47,15 @@ class FinnHubAPI(BaseFinanceAPI):
         Returns:
             dict: The retrieved stock candle data.
         """
-        return self.client.stock_candles(ticker, "D", from_date, to_date)
+        return self.client_api.stock_candles(ticker, "D", from_date, to_date)
 
     @lru_cache
     def pull_data(
         self,
-        ticker: str | list[str],
+        ticker: str | tuple[str],
         from_date: str,
         to_date: str,
-    ):
+    ) -> dict[str, int | float | str] | list[dict[str, int | float | str]]:
         """
         Retrieves stock candle data for a given ticker symbol or list of ticker symbols within a specified date range.
 
@@ -75,10 +70,14 @@ class FinnHubAPI(BaseFinanceAPI):
         from_date_unix = self.convert_date_to_unix(from_date)
         to_date_unix = self.convert_date_to_unix(to_date)
 
-        if isinstance(ticker, list):
-            return [self.pull_data_sync(name, from_date_unix, to_date_unix) for name in ticker]
-        else:
+        if not isinstance(ticker, tuple):
             return self.pull_data_sync(ticker, from_date_unix, to_date_unix)
+
+        result = []
+        for name in ticker:
+            response = {name: self.pull_data_sync(name, from_date_unix, to_date_unix)}
+            result.append(response)
+        return result
 
     @lru_cache
     def convert_date_to_unix(self, date: str) -> int:
@@ -92,7 +91,7 @@ class FinnHubAPI(BaseFinanceAPI):
             int: The UNIX timestamp corresponding to the input date.
         """
         date_split = date.split("-")
-        date_obj = datetime.date(date_split[0], date_split[1], date_split[2])
+        date_obj = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
         return int(time.mktime(date_obj.timetuple()))
 
     @lru_cache
@@ -107,3 +106,6 @@ class FinnHubAPI(BaseFinanceAPI):
             str: The date string corresponding to the input UNIX timestamp.
         """
         return datetime.datetime.fromtimestamp(unix_date, tz=datetime.timezone.utc).strftime("%Y-%m-%d")
+
+    def clean_data(self):
+        return super().clean_data()
