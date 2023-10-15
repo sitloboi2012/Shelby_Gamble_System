@@ -29,7 +29,7 @@ class FinnHubAPI(BaseFinanceAPI):
         self.client_api = self.connect_api()
 
     @lru_cache
-    def connect_api(self) -> Client:
+    def connect_api(self) -> Client:  # type: ignore
         """
         Connects to the API using the provided API key and returns a Client object.
 
