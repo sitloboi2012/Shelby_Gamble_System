@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 import datetime
+import logging
 
 import streamlit as st
 
 from model.finnhub import FinnHubAPI
+
+MODULE_NAME = "Main"
+logger = logging.getLogger(MODULE_NAME)
+
 
 FINNHUB_OBJ = FinnHubAPI()
 
@@ -29,4 +34,7 @@ def interface():
         with st.spinner("Ngủ đi! Hàng đang về"):
             response = FINNHUB_OBJ.pull_data(ticker, str(from_date), str(end_date))
         st.write("Dậy đi ông cháu ơi! Hàng về rồi")
+        logger.info(
+            f"Successfully pull {ticker} from {str(from_date)} to {str(end_date)}"
+        )
         st.dataframe(response, use_container_width=True)
