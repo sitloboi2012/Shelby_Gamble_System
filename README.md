@@ -14,5 +14,8 @@ pre-commit install
 pre-commit run --all-files
 ```
 
+Some file you need to change and replace the info before running the code:
+- Check shared folder on GDrive for `app/local.env` and `.streamlit/secrets.toml` for specific key information.
+
 ## Running UI
 To run the UI locally, run the following line: ```streamlit run app/main.py```

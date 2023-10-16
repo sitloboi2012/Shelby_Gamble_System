@@ -1,5 +1,6 @@
 aiohttp==3.8.5
 async_lru==2.0.4
+boto3
 coloredlogs==15.0.1
 discord.py==2.2.3
 fastapi==0.99.1
