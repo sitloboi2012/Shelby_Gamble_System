@@ -55,3 +55,11 @@ def upload_file_bytes(file_content: bytes, object_name: str) -> None:
 
     if response:
         print(f"Save {object_name} successfully to {S3_BUCKET}")
+
+
+def download_file(object_name: str, save_path: str):
+    return S3_CLIENT.download_file(S3_BUCKET, object_name, save_path)
+
+
+async def download_bucket():
+    pass
