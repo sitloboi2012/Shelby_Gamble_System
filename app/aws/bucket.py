@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from pathlib import Path
 import boto3
+import os
 from botocore.exceptions import ClientError
 from constant import Constant
 
@@ -61,5 +62,12 @@ def download_file(object_name: str, save_path: str):
     return S3_CLIENT.download_file(S3_BUCKET, object_name, save_path)
 
 
-async def download_bucket():
-    pass
+def download_bucket(save_folder: str | Path):
+    for object in S3_CLIENT.list_objects(Bucket=S3_BUCKET)["Contents"]:
+        try:
+            filename = object["Key"].rsplit("/", 1)[1]
+        except IndexError:
+            filename = object["Key"]
+
+        local_filename = os.path.join(save_folder, filename)  # type: ignore
+        download_file(filename, local_filename)

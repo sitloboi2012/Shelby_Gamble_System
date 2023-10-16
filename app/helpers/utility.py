@@ -21,7 +21,7 @@ from typing import Any, Callable, Coroutine, Iterable
 
 import discord
 from .paging import Paging
-from aws.bucket import upload_file_bytes, upload_file_object
+from aws.bucket import upload_file_object
 from loguru import logger
 from pydantic import BaseModel
 from starlette.responses import JSONResponse

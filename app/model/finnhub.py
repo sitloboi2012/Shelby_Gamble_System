@@ -36,7 +36,7 @@ class FinnHubAPI(BaseFinanceAPI):
         Returns:
             Client: The connected API client.
         """
-        with suppress(ValueError):
+        with suppress(ValueError, KeyError):
             return fb.Client(api_key=self.api_key)
 
     def pull_data_sync(self, ticker: str, from_date: int, to_date: int) -> dict:
