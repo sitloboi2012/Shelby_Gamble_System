@@ -10,13 +10,18 @@ import math
 import re
 import time
 import traceback
+import os
+import tempfile
+import json
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import suppress
+from pathlib import Path
 from functools import lru_cache, partial, wraps
 from typing import Any, Callable, Coroutine, Iterable
 
 import discord
 from .paging import Paging
+from aws.bucket import upload_file_object
 from loguru import logger
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
@@ -134,7 +139,7 @@ class Utility:
         for func, *args in tasks:
             kwargs = {}
             with suppress(TypeError, IndexError):
-                kwargs.update(args[-1])
+                kwargs |= args[-1]
                 args = args[:-1]
             coroutines.append(Utility.pool.unblock(pool_name, func, *args, **kwargs))
         return await asyncio.gather(*coroutines, return_exceptions=False)
@@ -182,7 +187,7 @@ class Utility:
             return "".join(traceback.format_exception(type(error), error, error.__traceback__))
         except Exception as _error:  # pylint: disable=broad-except
             Utility.logger.exception(Utility.format_exception(_error))
-            return error.__traceback__
+            return error.__traceback__  # type: ignore
 
     @staticmethod
     def convert_size(size_bytes) -> str:
@@ -238,6 +243,16 @@ class Utility:
             current.append(embed)
         result.append(current)
         return result
+
+    @staticmethod
+    def create_tmp_file(content: dict, file_name: str):
+        fd, path = tempfile.mkstemp()
+        try:
+            with os.fdopen(fd, "w") as tmp:
+                tmp.write(json.dumps(content))  # type: ignore
+        finally:
+            upload_file_object(Path(path), file_name)  # type: ignore
+            os.remove(path)
 
     @staticmethod
     @lru_cache(maxsize=2048)

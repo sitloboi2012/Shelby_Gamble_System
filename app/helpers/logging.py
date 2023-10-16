@@ -105,7 +105,7 @@ class WebhookHandler(logging.StreamHandler):
             await asyncio.sleep(1 - (time.perf_counter() - started))
 
     @staticmethod
-    def _get_record_message(record: logging.LogRecord) -> str:
+    def _get_record_message(record: logging.LogRecord) -> str: # type: ignore
         with suppress(AttributeError):
             return record.message
 
@@ -120,7 +120,7 @@ class WebhookHandler(logging.StreamHandler):
         try:
             # Loguru added the original record name in the `extra` attribute.
             # See `bot\__init__.py:36`
-            return record.extra["name"]
+            return record.extra["name"] # type: ignore
         except (AttributeError, KeyError):
             return record.name
 
