@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 import datetime
-
+import logging
+import json
 import streamlit as st
 
 from helpers.utility import Utility
 from model.finnhub import FinnHubAPI
+
+logger = logging.getLogger("Main")
 
 FINNHUB_OBJ = FinnHubAPI()
 
