@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
+import datetime
 
 from functools import lru_cache
 
+import logging
 import yfinance as yf
 
 
 from .base import BaseFinanceAPI
+
+MODULE_NAME = "YahooFinance_API"
+logger = logging.getLogger(MODULE_NAME)
 
 
 class YahooFinanceAPI(BaseFinanceAPI):
@@ -23,7 +28,7 @@ class YahooFinanceAPI(BaseFinanceAPI):
         info = yf.Ticker(ticker)
         history_data = info.history(period=period)
         clean_data = self.clean_data(history_data)
-
+        logger.info(f"Successfully pulling {ticker} from {datetime.datetime.now().date()} to {period} before")
         return clean_data
 
     def clean_data(self, response_data):

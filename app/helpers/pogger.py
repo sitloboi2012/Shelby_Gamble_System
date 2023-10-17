@@ -66,7 +66,8 @@ class WebhookHandler(logging.StreamHandler):
 
     @staticmethod
     def create(webhook_url: str, filters: Optional[Dict[str, List[str]]] = None) -> WebhookHandler:
-        """A method to create a WebhookHandler that will send logs using the send_method."""
+        """A method to create a WebhookHandler
+        that will send logs using the send_method."""
         handler = WebhookHandler(webhook_url)
 
         if filters:
@@ -105,7 +106,7 @@ class WebhookHandler(logging.StreamHandler):
             await asyncio.sleep(1 - (time.perf_counter() - started))
 
     @staticmethod
-    def _get_record_message(record: logging.LogRecord) -> str:
+    def _get_record_message(record: logging.LogRecord) -> str:  # type: ignore
         with suppress(AttributeError):
             return record.message
 
@@ -120,7 +121,7 @@ class WebhookHandler(logging.StreamHandler):
         try:
             # Loguru added the original record name in the `extra` attribute.
             # See `bot\__init__.py:36`
-            return record.extra["name"]
+            return record.extra["name"]  # type: ignore
         except (AttributeError, KeyError):
             return record.name
 
@@ -164,7 +165,8 @@ class WebhookHandler(logging.StreamHandler):
         """Periodically clear the queue every `wait_time` seconds, default 1."""
         async with aiohttp.ClientSession(loop=asyncio.get_event_loop()) as session:
             # This will be run in a seperated thread.
-            # To avoid asyncio raising errors for bounded lock in different threads, we need a new event loop.
+            # To avoid asyncio raising errors
+            # for bounded lock in different threads, we need a new event loop.
             while True:
                 if self._queue:
                     await self._emit(session)

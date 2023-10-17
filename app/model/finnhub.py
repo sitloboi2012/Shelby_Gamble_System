@@ -4,6 +4,7 @@ from contextlib import suppress
 
 import datetime
 import time
+import logging
 
 from functools import lru_cache
 
@@ -13,6 +14,10 @@ import finnhub as fb
 from finnhub.client import Client
 
 from .base import BaseFinanceAPI
+from helpers.utility import Utility
+
+MODULE_NAME = "FinnHub_API"
+logger = logging.getLogger(MODULE_NAME)
 
 
 class FinnHubAPI(BaseFinanceAPI):
@@ -55,12 +60,13 @@ class FinnHubAPI(BaseFinanceAPI):
         return self.client_api.stock_candles(ticker, "D", from_date, to_date)
 
     @lru_cache
+    @Utility.measure_runtime
     def pull_data(
         self,
         ticker: str | tuple[str],
         from_date: str,
         to_date: str,
-    ) -> dict[str, int | float | str] | list[dict[str, int | float | str]]:
+    ) -> dict[str, int | float | str] | list[dict[str, int | float | str]] | None:
         """
         Retrieves stock candle data for a given ticker symbol or list of
         ticker symbols within a specified date range.
@@ -77,16 +83,22 @@ class FinnHubAPI(BaseFinanceAPI):
         """
         from_date_unix = self.convert_date_to_unix(from_date)
         to_date_unix = self.convert_date_to_unix(to_date)
+        try:
+            if not isinstance(ticker, tuple):
+                response = self.pull_data_sync(ticker, from_date_unix, to_date_unix)
+                logger.info(f"Successfully pulling {ticker} from {from_date} to {to_date}")
+                return self.clean_data(response)
 
-        if not isinstance(ticker, tuple):
-            response = self.pull_data_sync(ticker, from_date_unix, to_date_unix)
-            return self.clean_data(response)
+            result = []
+            for name in ticker:
+                response = {name: self.pull_data_sync(name, from_date_unix, to_date_unix)}
+                result.append(response)
 
-        result = []
-        for name in ticker:
-            response = {name: self.pull_data_sync(name, from_date_unix, to_date_unix)}
-            result.append(response)
-        return result
+            logger.info(f"Successfully pulling {ticker} from {from_date} to {to_date}")
+            return result
+        except Exception as error:
+            logger.error(error)
+            return None
 
     @lru_cache
     def convert_date_to_unix(self, date: str) -> int:
