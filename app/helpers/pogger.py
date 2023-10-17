@@ -62,14 +62,10 @@ class WebhookHandler(logging.StreamHandler):
     @staticmethod
     def format_exception(error: Exception) -> str:
         """Format the error traceback into a string."""
-        return "".join(
-            traceback.format_exception(type(error), error, error.__traceback__)
-        )
+        return "".join(traceback.format_exception(type(error), error, error.__traceback__))
 
     @staticmethod
-    def create(
-        webhook_url: str, filters: Optional[Dict[str, List[str]]] = None
-    ) -> WebhookHandler:
+    def create(webhook_url: str, filters: Optional[Dict[str, List[str]]] = None) -> WebhookHandler:
         """A method to create a WebhookHandler
         that will send logs using the send_method."""
         handler = WebhookHandler(webhook_url)
@@ -99,9 +95,7 @@ class WebhookHandler(logging.StreamHandler):
         if self._pass_filter(record):
             self._queue.append(record)
 
-    async def _send(
-        self, session: aiohttp.ClientSession, embeds: List[discord.Embed]
-    ) -> None:
+    async def _send(self, session: aiohttp.ClientSession, embeds: List[discord.Embed]) -> None:
         if not embeds:
             return
 
@@ -137,17 +131,11 @@ class WebhookHandler(logging.StreamHandler):
 
         try:
             embeds: List[discord.Embed] = []
-            for levelname, queues in itertools.groupby(
-                self._queue, key=lambda r: r.levelname
-            ):
-                embed = discord.Embed(
-                    color=LogColor.get_color(levelname), timestamp=utcnow()
-                )
+            for levelname, queues in itertools.groupby(self._queue, key=lambda r: r.levelname):
+                embed = discord.Embed(color=LogColor.get_color(levelname), timestamp=utcnow())
                 embed.set_author(name=levelname)
                 embeds_builder = EmbedListBuilder(base_embed=embed)
-                for name, records in itertools.groupby(
-                    queues, key=self._get_record_name
-                ):
+                for name, records in itertools.groupby(queues, key=self._get_record_name):
                     record_texts: List[str] = []
                     for record in records:
                         if text := self._get_record_message(record):
@@ -164,9 +152,7 @@ class WebhookHandler(logging.StreamHandler):
                     )
 
                     for message in messages:
-                        embeds_builder.add_field(
-                            name=name, value=message, inline=False, wrap_code=True
-                        )
+                        embeds_builder.add_field(name=name, value=message, inline=False, wrap_code=True)
                 embeds.extend(embeds_builder)
             await self._send(session, embeds)
         except Exception as error:  # pylint: disable=broad-except

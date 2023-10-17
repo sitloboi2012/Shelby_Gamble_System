@@ -153,7 +153,7 @@ class EmbedListBuilder:
         # 1 for the newline
         additional_length = 1 + len(value)
 
-        if len(self.latest_embed.description) + additional_length > EmbedLimits.DESCRIPTION_LIMIT: # type: ignore
+        if len(self.latest_embed.description) + additional_length > EmbedLimits.DESCRIPTION_LIMIT:  # type: ignore
             # Latest embed has reached field limit, make a new one.
             self._new_embed()
 
@@ -161,14 +161,14 @@ class EmbedListBuilder:
             # Latest embed will reach length limit, make a new one.
             self._new_embed()
 
-        self.latest_embed.description += f"\n{value}" # type: ignore
+        self.latest_embed.description += f"\n{value}"  # type: ignore
 
     async def reply(self, ctx: commands.Context | discord.Message):
         """Convenience function that replies in a context with all of the embeds."""
         for embed in self:
             await ctx.reply(embed=embed)
 
-    async def send(self, ctx: discord.abc.Messageable, content: str = None): # type: ignore
+    async def send(self, ctx: discord.abc.Messageable, content: str = None):  # type: ignore
         """Send all embeds via a discord.abc.Messageable."""
         for embed in self:
             await ctx.send(content=content, embed=embed)

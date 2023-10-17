@@ -12,19 +12,19 @@ class Webhook:
         self.webhook_api = None
 
         self._embed_properties = (
-            'title',
-            'type',
-            'description',
-            'url',
-            'timestamp',
-            'color',
-            'footer',
-            'image',
-            'thumbnail',
-            'video',
-            'provider',
-            'author',
-            'fields',
+            "title",
+            "type",
+            "description",
+            "url",
+            "timestamp",
+            "color",
+            "footer",
+            "image",
+            "thumbnail",
+            "video",
+            "provider",
+            "author",
+            "fields",
         )
 
     def send(self, *, webhook_api=None, body=None, embed=None, is_raw=False):
@@ -51,16 +51,16 @@ class Webhook:
         _api = webhook_api or self.webhook_api
 
         if not _api:
-            return 'You have to either setup api or pass the api to the function.'
+            return "You have to either setup api or pass the api to the function."
 
         if not body and not embed:
-            return 'Cannot send empty message'
+            return "Cannot send empty message"
 
         if embed:
             body = body or {}
-            body['embeds'] = embed if isinstance(embed, list) else [embed]
+            body["embeds"] = embed if isinstance(embed, list) else [embed]
 
-        _body = body if is_raw else self._customize(body) #type: ignore
+        _body = body if is_raw else self._customize(body)  # type: ignore
         response = self.session.post(_api, json=_body)
 
         if response.status_code not in (200, 204):
@@ -68,10 +68,10 @@ class Webhook:
                 _api,
                 json=self._customize(
                     {
-                        'content': f"<@128376038605586432> **{response.status_code}** - ```json\n{response.text}'"[
+                        "content": f"<@128376038605586432> **{response.status_code}** - ```json\n{response.text}'"[
                             :2045
                         ]
-                        + '```'
+                        + "```"
                     }
                 ),
             )
@@ -95,14 +95,14 @@ class Webhook:
         Arguments:
             body {[type]} -- [description]
         """
-        _body = dict(body)
+        _body = body.copy()
 
-        for key in ('username', 'avatar_url'):
+        for key in ("username", "avatar_url"):
             if key not in _body and key in self.customization:
                 _body[key] = self.customization[key]
 
-        if 'embeds' in _body:
-            for embed in _body['embeds']:
+        if "embeds" in _body:
+            for embed in _body["embeds"]:
                 for key in self._embed_properties:
                     if key not in embed and key in self.customization:
                         embed[key] = self.customization[key]

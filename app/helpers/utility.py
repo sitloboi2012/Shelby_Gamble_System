@@ -252,7 +252,7 @@ class Utility:
                 tmp.write(json.dumps(content))  # type: ignore
         finally:
             upload_file_object(Path(path), file_name)  # type: ignore
-            os.remove(path)
+            Path(path).unlink()
 
     @staticmethod
     @lru_cache(maxsize=2048)
