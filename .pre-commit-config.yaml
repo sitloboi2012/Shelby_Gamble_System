@@ -17,10 +17,10 @@ repos:
         args:
           - --in-place
           - --expand-star-imports
-  #- repo: https://github.com/dosisod/refurb
-  #  rev: 68a878e
-  #  hooks:
-  #    - id: refurb
+  - repo: https://github.com/dosisod/refurb
+    rev: 68a878e
+    hooks:
+      - id: refurb
   - repo: https://github.com/psf/black
     rev: 23.9.1
     hooks:

@@ -128,9 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Streamlit
-.streamlit/secrets.toml
-
 # VS Code
 .vscode
 .ruff_cache

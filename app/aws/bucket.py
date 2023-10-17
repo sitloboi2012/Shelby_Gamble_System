@@ -2,8 +2,12 @@
 from pathlib import Path
 import boto3
 import os
+import logging
 from botocore.exceptions import ClientError
 from constant import Constant
+
+MODULE_NAME = "AWS_S3_BUCKET"
+logger = logging.getLogger(MODULE_NAME)
 
 S3_CLIENT = boto3.client(
     "s3",
@@ -11,7 +15,7 @@ S3_CLIENT = boto3.client(
     aws_secret_access_key=Constant.AWS_SECRET_ACCESS_KEY,
 )
 
-S3_BUCKET = "shelby-raw-data-bucket"
+S3_BUCKET = "shelby-data-lake"
 
 
 def upload_file_object(file_name: Path, object_name: str) -> None:
@@ -27,11 +31,10 @@ def upload_file_object(file_name: Path, object_name: str) -> None:
     """
     try:
         response = S3_CLIENT.upload_file(file_name, S3_BUCKET, object_name)
+        logger.info(f"Save {object_name} successfully to {S3_BUCKET}")
     except ClientError as error:
+        logger.error(error)
         raise error
-
-    if response:
-        print(f"Save {object_name} successfully to {S3_BUCKET}")
 
 
 def upload_file_bytes(file_content: bytes, object_name: str) -> None:
@@ -55,7 +58,7 @@ def upload_file_bytes(file_content: bytes, object_name: str) -> None:
         raise error
 
     if response:
-        print(f"Save {object_name} successfully to {S3_BUCKET}")
+        logger.info(f"Save {object_name} successfully to {S3_BUCKET}")
 
 
 def download_file(object_name: str, save_path: str):
