@@ -8,7 +8,9 @@ import streamlit as st
 from helpers.utility import Utility
 from model.finnhub import FinnHubAPI
 
-logger = logging.getLogger("Main")
+
+MODULE_NAME = "Main"
+logger = logging.getLogger(MODULE_NAME)
 
 FINNHUB_OBJ = FinnHubAPI()
 
@@ -33,7 +35,6 @@ def interface():
     if export_api or export_download:
         with st.spinner("Ngủ đi! Hàng đang về"):
             response = FINNHUB_OBJ.pull_data(ticker, str(from_date), str(end_date))
-        logger.info("Successfuly Pulling Data")
         filename = f"{ticker}-{from_date}-{end_date}-{datetime.datetime.now().date()}"
         Utility.create_tmp_file(response, filename)  # type: ignore
         st.write("Dậy đi ông cháu ơi! Hàng về rồi")
