@@ -2,6 +2,7 @@
 from __future__ import annotations
 import datetime
 import logging
+import json
 
 import streamlit as st
 
@@ -15,7 +16,7 @@ logger = logging.getLogger(MODULE_NAME)
 FINNHUB_OBJ = FinnHubAPI()
 
 
-def input_data():
+def input_form():
     with st.form("data-form"):
         ticker = st.selectbox("Hôm nay xem con hàng nào:", ["AAPL", "TSLA"])
         from_date = st.date_input("Ngày bắt đầu", datetime.date(2022, 1, 1))
@@ -30,12 +31,17 @@ def interface():
     st.markdown("__Tích cực quay tay, vận may sẽ tới__")
 
     with st.sidebar:
-        ticker, from_date, end_date, export_api, export_download = input_data()
+        ticker, from_date, end_date, export_api, export_download = input_form()
 
     if export_api or export_download:
         with st.spinner("Ngủ đi! Hàng đang về"):
             response = FINNHUB_OBJ.pull_data(ticker, str(from_date), str(end_date))
+        logger.info("Successfuly Pulling Data")
         filename = f"{ticker}-{from_date}-{end_date}-{datetime.datetime.now().date()}"
         Utility.create_tmp_file(response, filename)  # type: ignore
         st.write("Dậy đi ông cháu ơi! Hàng về rồi")
-        st.dataframe(response, use_container_width=True)
+
+        if export_api:
+            st.dataframe(response, use_container_width=True)
+        elif export_download:
+            st.download_button("Download", json.dumps(response))

@@ -11,7 +11,7 @@ S3_CLIENT = boto3.client(
     aws_secret_access_key=Constant.AWS_SECRET_ACCESS_KEY,
 )
 
-S3_BUCKET = "shelby-raw-data-bucket"
+S3_BUCKET = "shelby-data-lake"
 
 
 def upload_file_object(file_name: Path, object_name: str) -> None:

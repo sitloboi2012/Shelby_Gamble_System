@@ -13,6 +13,7 @@ import finnhub as fb
 from finnhub.client import Client
 
 from .base import BaseFinanceAPI
+from helpers.utility import Utility
 
 
 class FinnHubAPI(BaseFinanceAPI):
@@ -55,6 +56,7 @@ class FinnHubAPI(BaseFinanceAPI):
         return self.client_api.stock_candles(ticker, "D", from_date, to_date)
 
     @lru_cache
+    @Utility.measure_runtime
     def pull_data(
         self,
         ticker: str | tuple[str],
