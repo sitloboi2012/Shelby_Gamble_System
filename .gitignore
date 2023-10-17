@@ -128,9 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Streamlit
+.streamlit
+
 # VS Code
 .vscode
 .ruff_cache
-.streamlit
 
 .DS_Store

@@ -11,8 +11,10 @@ from model.finnhub import FinnHubAPI
 
 MODULE_NAME = "Main"
 logger = logging.getLogger(MODULE_NAME)
+from model.yahoo import YahooFinanceAPI
 
 FINNHUB_OBJ = FinnHubAPI()
+YAHOO_OBJ = YahooFinanceAPI()
 
 
 def input_form():
@@ -34,11 +36,13 @@ def interface():
 
     if export_api or export_download:
         with st.spinner("Ngủ đi! Hàng đang về"):
-            response = FINNHUB_OBJ.pull_data(ticker, str(from_date), str(end_date))
+            response_1 = FINNHUB_OBJ.pull_data(ticker, str(from_date), str(end_date))
+            response_2 = YAHOO_OBJ.pull_data(ticker)  # type: ignore
         filename = f"{ticker}-{from_date}-{end_date}-{datetime.datetime.now().date()}"
-        Utility.create_tmp_file(response, filename)  # type: ignore
+        Utility.create_tmp_file(response_1, filename)  # type: ignore
         st.write("Dậy đi ông cháu ơi! Hàng về rồi")
         if export_api:
-            st.dataframe(response, use_container_width=True)
+            st.dataframe(response_1, use_container_width=True)
+            st.dataframe(response_2, use_container_width=True)
         elif export_download:
-            st.download_button("Download", json.dumps(response))
+            st.download_button("Download", json.dumps(response_1))

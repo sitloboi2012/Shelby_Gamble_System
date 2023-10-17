@@ -86,6 +86,7 @@ class FinnHubAPI(BaseFinanceAPI):
         try:
             if not isinstance(ticker, tuple):
                 response = self.pull_data_sync(ticker, from_date_unix, to_date_unix)
+                logger.info(f"Successfully pulling {ticker} from {from_date} to {to_date}")
                 return self.clean_data(response)
 
             result = []
