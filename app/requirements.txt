@@ -14,3 +14,4 @@ numpy==1.25.2
 pydantic
 streamlit==1.27.2
 uvicorn[standard]==0.23.2
+yfinance==0.2.31

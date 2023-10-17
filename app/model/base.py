@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 
 class BaseFinanceAPI(ABC):
-    def __init__(self, api_name: str, api_key: str):
+    def __init__(self, api_name: str, api_key: str | None):
         self.api_name = api_name
         self.api_key = api_key
 
