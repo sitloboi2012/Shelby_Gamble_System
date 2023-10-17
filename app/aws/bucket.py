@@ -31,11 +31,10 @@ def upload_file_object(file_name: Path, object_name: str) -> None:
     """
     try:
         response = S3_CLIENT.upload_file(file_name, S3_BUCKET, object_name)
-    except ClientError as error:
-        raise error
-
-    if response:
         logger.info(f"Save {object_name} successfully to {S3_BUCKET}")
+    except ClientError as error:
+        logger.error(error)
+        raise error
 
 
 def upload_file_bytes(file_content: bytes, object_name: str) -> None:

@@ -92,7 +92,8 @@ class FinnHubAPI(BaseFinanceAPI):
             for name in ticker:
                 response = {name: self.pull_data_sync(name, from_date_unix, to_date_unix)}
                 result.append(response)
-            logger.info(f"Successfully pull {ticker} from {from_date} to {to_date}")
+
+            logger.info(f"Successfully pulling {ticker} from {from_date} to {to_date}")
             return result
         except Exception as error:
             logger.error(error)

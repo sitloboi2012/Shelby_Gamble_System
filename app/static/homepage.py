@@ -38,7 +38,6 @@ def interface():
         filename = f"{ticker}-{from_date}-{end_date}-{datetime.datetime.now().date()}"
         Utility.create_tmp_file(response, filename)  # type: ignore
         st.write("Dậy đi ông cháu ơi! Hàng về rồi")
-
         if export_api:
             st.dataframe(response, use_container_width=True)
         elif export_download:
