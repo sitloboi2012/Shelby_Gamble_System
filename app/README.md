@@ -1,0 +1,13 @@
+# API Back-end
+
+## Setup
+To setup the back-end locally, follow these steps:
+```
+conda create --name shelby-project python=3.11
+conda activate shelby-project
+
+pip install -r app/requirements-dev.txt
+
+pre-commit install
+pre-commit run --all-files
+```
