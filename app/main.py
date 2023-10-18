@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
 
-import logging_setup
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from router import finnhub
+from router import finnhub, yahoo
 
 logger = logging.getLogger("Backend")
 
@@ -27,6 +26,7 @@ app.add_middleware(
 )
 
 app.include_router(finnhub.router)
+app.include_router(yahoo.router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", workers=1, host="0.0.0.0", port=8080)
