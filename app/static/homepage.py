@@ -7,7 +7,7 @@ import streamlit as st
 
 from helpers.utility import Utility
 from model.finnhub import FinnHubAPI
-
+from model.news import NewsAPI
 
 MODULE_NAME = "Main"
 logger = logging.getLogger(MODULE_NAME)
@@ -46,3 +46,31 @@ def interface():
             st.dataframe(response_2, use_container_width=True)
         elif export_download:
             st.download_button("Download", json.dumps(response_1))
+            
+    news_scraper_section()
+            
+            
+            
+
+
+def news_scraper_section():
+    st.sidebar.header("News Scraper")
+
+    article_url = st.sidebar.text_input("Enter the URL of a news article:")
+    scrape_button = st.sidebar.button("Scrape Article")
+
+    if scrape_button and article_url:
+        news_scraper = NewsAPI(article_url)
+
+        news_scraper.scrape_article()
+
+        article_data = news_scraper.get_article_data()
+
+        if article_data:
+            st.subheader("Article Details")
+            st.write(f"Title: {article_data['title']}")
+            st.write(f"Author: {article_data['authors']}")
+            st.write(f"Publish Date: {article_data['publish_date']}")
+            st.write(f"Article Text: {article_data['text']}")
+        else:
+            st.error("Failed to scrape the article. Please check the URL.")
