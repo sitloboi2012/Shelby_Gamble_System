@@ -8,7 +8,7 @@ from router import finnhub, yahoo
 
 logger = logging.getLogger("Backend")
 
-app = FastAPI(openapi_url="/api/shelby-backend/openapi.json", docs_url="/api/shelby-backend/docs")
+app = FastAPI(openapi_url="/api/shelby-backend/openapi.json", docs_url="/api/shelby-backend/docs")  # type: ignore
 
 origins = [
     "http://localhost.tiangolo.com",
