@@ -6,7 +6,7 @@ This is the repository for LostD team for the Shelby Gamble System project. The 
 Please refer to `app` and `client` folder for more information.
 
 Some files you need to change and replace the info before running the code:
-- Create a folder at the parent path, `.streamlit/secrets.toml` and `app/local.env`
+- Create a folder at the parent path, `.streamlit/secrets.toml` and access to `app/local.env` to update the API key information.
 - Check shared folder on GDrive for API KEY for specific key information like FinnHub or AWS.
 - With `.streamlit/secrets.toml`, the format of the file would be `NAME = "API_KEY"`
 - With `app/local.env`, the format of the file would be `NAME = API_KEY`
