@@ -6,4 +6,3 @@ from static.homepage import interface
 logger = logging.getLogger("Backend")
 
 interface()
-# test commit

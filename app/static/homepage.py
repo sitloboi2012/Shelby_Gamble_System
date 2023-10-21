@@ -62,7 +62,7 @@ def news_scraper_section():
     if scrape_button and article_url:
         news_scraper = NewsAPI(article_url)
 
-        news_scraper.scrape_article()
+        news_scraper.pull_data()
 
         article_data = news_scraper.get_article_data()
 

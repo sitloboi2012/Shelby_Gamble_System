@@ -19,3 +19,4 @@ class BaseFinanceAPI(ABC):
     @abstractmethod
     def connect_api(self):
         pass
+
