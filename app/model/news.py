@@ -26,7 +26,7 @@ class NewsAPI(BaseFinanceAPI):
         self.article = Article(self.url)
         self.article.download()
         self.article.parse()
-        logger.info(f"Successfully pulling {self.article.title}.")
+        logger.info(f"Successfully scrapping news: '{self.article.title}'.")
         
         
     def get_article_data(self):
