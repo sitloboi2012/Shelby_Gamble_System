@@ -66,14 +66,7 @@ class Webhook:
         if response.status_code not in (200, 204):
             self.session.post(
                 _api,
-                json=self._customize(
-                    {
-                        "content": f"<@128376038605586432> **{response.status_code}** - ```json\n{response.text}'"[
-                            :2045
-                        ]
-                        + "```"
-                    }
-                ),
+                json=self._customize({"content": f"<@128376038605586432> **{response.status_code}** - ```json\n{response.text}'"[:2045] + "```"}),
             )
 
         return response
