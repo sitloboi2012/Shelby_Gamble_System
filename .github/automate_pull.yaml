@@ -1,0 +1,28 @@
+name: Pulling Data From API
+
+on:
+  push:
+    branches:
+      - master
+  
+  schedule:
+    - cron: '15 21 * * *' # run everyday at 21:15 pm
+
+jobs:
+  pulling-data-automation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: pip install -r app/requirements.txt
+
+      - name: Run Automation
+        run: python app/snippet.py
