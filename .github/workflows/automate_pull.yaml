@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-  
-  schedule:
-    - cron: '15 21 * * *' # run everyday at 21:15 pm
 
 jobs:
   pulling-data-automation:
