@@ -134,6 +134,6 @@ dmypy.json
 # VS Code
 .vscode
 .ruff_cache
-**/local.env
+app/*.env
 
 .DS_Store
